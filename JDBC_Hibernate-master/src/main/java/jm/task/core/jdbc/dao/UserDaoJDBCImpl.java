@@ -4,6 +4,7 @@ import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
@@ -11,18 +12,16 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
 
    }
-   public boolean tableExist() {
-       try (Connection connection = Util.getConnection()){
-           DatabaseMetaData dmd = connection.getMetaData();
-           ResultSet rs = dmd.getTables(null, null,Util.NAME_OF_TABLE, null);
-           if(rs.next()) {
-               return true;
-           }
-       } catch (SQLException e) {
-           throw new RuntimeException(e);
-       }
-       return false;
-   }
+//   public boolean tableExist() {
+//       try (Connection connection = Util.getConnection()){
+//           DatabaseMetaData dmd = connection.getMetaData();
+//           ResultSet rs = dmd.getTables(null, null, Util.NAME_OF_TABLE, null);
+//
+//           return rs.next();
+//       } catch (SQLException e) {
+//           throw new RuntimeException(e);
+//       }
+//   }
 
    public void setStatement(String sql) {
        try (Connection connection = Util.getConnection()){
@@ -51,31 +50,69 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        if (!tableExist()){
-            createUsersTable();
-        }
+        createUsersTable();
         try (Connection connection = Util.getConnection()) {
             String sql = "INSERT INTO " + Util.NAME_OF_TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setString(1, name);
             statement.setString(2, lastName);
-            statement.setInt(3, age);
+            statement.setByte(3, age);
+            statement.executeUpdate();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void removeUserById(long id) {
+    public void saveUser(User user) {
+        saveUser(user.getName(), user.getLastName(), user.getAge());
+    }
 
+    public void removeUserById(long id) {
+        try (Connection connection = Util.getConnection();){
+            String sql = "DELETE FROM " + Util.NAME_OF_TABLE + " WHERE id = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setLong(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<User> getAllUsers() {
-        return null;
+        List<User> userList = new ArrayList<>();
+
+        try (Connection connection = Util.getConnection()) {
+            String sql = "SELECT * FROM " + Util.NAME_OF_TABLE;
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                long id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                String lastName = resultSet.getString("lastName");
+                byte age = resultSet.getByte("age");
+
+                User user = new User(name, lastName, age);
+                user.setId(id);
+                userList.add(user);
+            }
+        } catch (SQLException e) {
+            System.err.println("Ошибка при извлечении данных из таблицы: " + e.getMessage());
+        }
+
+        return userList;
     }
 
     public void cleanUsersTable() {
-
+        try (Connection connection = Util.getConnection()) {
+            String sql = "DELETE FROM " + Util.NAME_OF_TABLE;
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
