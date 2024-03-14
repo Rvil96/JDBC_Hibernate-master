@@ -12,16 +12,6 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
 
    }
-//   public boolean tableExist() {
-//       try (Connection connection = Util.getConnection()){
-//           DatabaseMetaData dmd = connection.getMetaData();
-//           ResultSet rs = dmd.getTables(null, null, Util.NAME_OF_TABLE, null);
-//
-//           return rs.next();
-//       } catch (SQLException e) {
-//           throw new RuntimeException(e);
-//       }
-//   }
 
    public void setStatement(String sql) {
        try (Connection connection = Util.getConnection()){
