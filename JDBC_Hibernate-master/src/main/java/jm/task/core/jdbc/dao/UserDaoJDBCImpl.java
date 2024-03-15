@@ -9,14 +9,19 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
-    public UserDaoJDBCImpl() {
+    private Connection connection;
 
-   }
+    public UserDaoJDBCImpl() {
+        try {
+            connection = Util.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
    public void setStatement(String sql) {
-       try (Connection connection = Util.getConnection()){
-           Statement statement = connection.createStatement();
-           statement.execute(sql);
+       try (PreparedStatement statement = connection.prepareStatement(sql)) {
+           statement.executeUpdate();
        } catch (SQLException e) {
            throw new RuntimeException(e);
        }
@@ -41,29 +46,23 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
         createUsersTable();
-        try (Connection connection = Util.getConnection()) {
-            String sql = "INSERT INTO " + Util.NAME_OF_TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "INSERT INTO " + Util.NAME_OF_TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
 
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
             statement.setString(2, lastName);
             statement.setByte(3, age);
             statement.executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void saveUser(User user) {
-        saveUser(user.getName(), user.getLastName(), user.getAge());
-    }
 
     public void removeUserById(long id) {
-        try (Connection connection = Util.getConnection();){
-            String sql = "DELETE FROM " + Util.NAME_OF_TABLE + " WHERE id = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "DELETE FROM " + Util.NAME_OF_TABLE + " WHERE id = ?";
 
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -73,11 +72,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-
-        try (Connection connection = Util.getConnection()) {
-            String sql = "SELECT * FROM " + Util.NAME_OF_TABLE;
-            PreparedStatement statement = connection.prepareStatement(sql);
-
+        String sql = "SELECT * FROM " + Util.NAME_OF_TABLE;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 long id = resultSet.getInt("id");
@@ -97,10 +93,18 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try (Connection connection = Util.getConnection()) {
-            String sql = "DELETE FROM " + Util.NAME_OF_TABLE;
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "DELETE FROM " + Util.NAME_OF_TABLE;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void connectionClose() {
+        try {
+            if (connection != null) {
+            connection.close();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

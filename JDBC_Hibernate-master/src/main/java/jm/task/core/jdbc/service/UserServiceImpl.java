@@ -1,12 +1,13 @@
 package jm.task.core.jdbc.service;
 
+import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
-    private UserDaoJDBCImpl daoJDBC;
+    private UserDao daoJDBC;
     public UserServiceImpl() {
         daoJDBC = new UserDaoJDBCImpl();
     }
@@ -22,9 +23,6 @@ public class UserServiceImpl implements UserService {
         daoJDBC.saveUser(name,lastName, age);
     }
 
-    public void saveUser(User user) {
-        daoJDBC.saveUser(user);
-    }
 
     public void removeUserById(long id) {
         daoJDBC.removeUserById(id);
@@ -37,4 +35,6 @@ public class UserServiceImpl implements UserService {
     public void cleanUsersTable() {
         daoJDBC.cleanUsersTable();
     }
+
+    public void connectionClose() {((UserDaoJDBCImpl)daoJDBC).connectionClose();}
 }
