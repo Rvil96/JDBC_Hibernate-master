@@ -1014,7 +1014,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     </schema>
     <schema id="294" parent="1" name="testdb">
       <Current>1</Current>
-      <LastIntrospectionLocalTimestamp>2024-03-17.10:00:30</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-03-18.15:21:31</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="295" parent="1" name="world">
@@ -1039,5 +1039,39 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
+    <table id="300" parent="294" name="users">
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <column id="301" parent="300" name="id">
+      <AutoIncrement>2</AutoIncrement>
+      <DasType>int|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+    </column>
+    <column id="302" parent="300" name="name">
+      <DasType>varchar(50)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+    </column>
+    <column id="303" parent="300" name="lastName">
+      <DasType>varchar(50)|0s</DasType>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+    </column>
+    <column id="304" parent="300" name="age">
+      <DasType>int|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <index id="305" parent="300" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="306" parent="300" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>

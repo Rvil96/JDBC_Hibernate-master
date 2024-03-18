@@ -1,5 +1,9 @@
 package jm.task.core.jdbc.util;
 
+import jm.task.core.jdbc.model.User;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
 import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,6 +17,8 @@ public class Util {
     public static final String NAME_OF_TABLE = "users";
     private static Properties properties = new Properties();
     private static FileInputStream fis;
+
+
 
     static {
         loadFile();
@@ -33,5 +39,11 @@ public class Util {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(url, name, password);
+    }
+
+    public static SessionFactory getSession() {
+        return new Configuration()
+                .addAnnotatedClass(User.class)
+                .buildSessionFactory();
     }
 }
