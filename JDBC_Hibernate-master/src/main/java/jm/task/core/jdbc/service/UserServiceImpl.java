@@ -2,14 +2,12 @@ package jm.task.core.jdbc.service;
 
 import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
-import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
 
 import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private UserDao daoHibernate;
-    private  UserDao daoJDBC;
     public UserServiceImpl() {
         daoHibernate = new UserDaoHibernateImpl();
     }
@@ -38,5 +36,4 @@ public class UserServiceImpl implements UserService {
         daoHibernate.cleanUsersTable();
     }
 
-    public void connectionClose() {((UserDaoJDBCImpl)daoJDBC).connectionClose();}
 }

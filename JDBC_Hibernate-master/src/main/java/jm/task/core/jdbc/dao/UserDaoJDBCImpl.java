@@ -29,7 +29,7 @@ public class UserDaoJDBCImpl implements UserDao {
    }
 
     public void createUsersTable() {
-        String sql = "CREATE TABLE IF NOT EXISTS " + Util.NAME_OF_TABLE + " ("
+        String sql = "CREATE TABLE IF NOT EXISTS users ("
                 + "id INT AUTO_INCREMENT PRIMARY KEY,"
                 + "name VARCHAR(50) NOT NULL,"
                 + "lastName VARCHAR(50) NOT NULL,"
@@ -40,13 +40,12 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        String sql = "DROP TABLE IF EXISTS " + Util.NAME_OF_TABLE;
+        String sql = "DROP TABLE IF EXISTS users";
         setStatement(sql);
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        createUsersTable();
-        String sql = "INSERT INTO " + Util.NAME_OF_TABLE + " (name, lastName, age) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, name);
@@ -60,7 +59,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
 
     public void removeUserById(long id) {
-        String sql = "DELETE FROM " + Util.NAME_OF_TABLE + " WHERE id = ?";
+        String sql = "DELETE FROM users WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)){
             statement.setLong(1, id);
@@ -72,7 +71,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
-        String sql = "SELECT * FROM " + Util.NAME_OF_TABLE;
+        String sql = "SELECT * FROM users";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -93,7 +92,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        String sql = "DELETE FROM " + Util.NAME_OF_TABLE;
+        String sql = "DELETE FROM users";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
         } catch (SQLException e) {
