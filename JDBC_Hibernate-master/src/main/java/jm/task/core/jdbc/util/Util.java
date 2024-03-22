@@ -9,12 +9,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-    private static String url = "jdbc:mysql://localhost:3306/testdb";
-    private static String name = "root";
-    private static String password = "root";
+    private final static String URL = "jdbc:mysql://localhost:3306/testdb";
+    private final static String NAME = "root";
+    private final static String PASSWORD = "root";
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(url, name, password);
+        return DriverManager.getConnection(URL, NAME, PASSWORD);
     }
 
     public static SessionFactory getSessionFactory() {
