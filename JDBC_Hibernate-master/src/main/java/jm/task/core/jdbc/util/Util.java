@@ -15,6 +15,7 @@ public class Util {
     private final static String NAME = "root";
     private final static String PASSWORD = "root";
     private final static String DRIVER = "com.mysql.jdbc.Driver";
+    private final static String DIALECT = "org.hibernate.dialect.MySQL8Dialect";
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, NAME, PASSWORD);
@@ -26,6 +27,7 @@ public class Util {
         properties.put(Environment.URL, URL);
         properties.put(Environment.USER, NAME);
         properties.put(Environment.PASS, PASSWORD);
+        properties.put(Environment.DIALECT, DIALECT);
 
         return new Configuration()
                 .setProperties(properties)
