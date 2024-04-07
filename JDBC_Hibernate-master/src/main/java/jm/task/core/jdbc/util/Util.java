@@ -29,6 +29,7 @@ public class Util {
         properties.put(Environment.PASS, PASSWORD);
         properties.put(Environment.DIALECT, DIALECT);
 
+
         return new Configuration()
                 .setProperties(properties)
                 .addAnnotatedClass(User.class)
